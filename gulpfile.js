@@ -20,11 +20,15 @@ var gulp = require('gulp'),
 gulp.task('serve', function(file){
 	browserSync.init({
 		server: {
-			baseDir: 'app/'
-		}
+			baseDir: 'app/',
+		},
+		port: 8000
 	});
+	//监听文件变化重新编译
 	gulp.watch('app/less/**/*.less', ['less-dev']);
-	gulp.watch('app/js/**/*', ['concat-js-dev','concat-js-dev-plugins']);
+	gulp.watch('app/js/*.js', ['concat-js-dev']);
+	gulp.watch('app/js/plugins/*.js', ['concat-js-dev-plugins']);
+	gulp.watch('app/js/vendor/*.js', ['concat-js-vendor']);
 	gulp.watch('app/css/**/*', ['concat-css-dev']);
 	gulp.watch('app/images/**/*', ['img-dev']);
 	//监听文件变化刷新浏览器
@@ -32,7 +36,7 @@ gulp.task('serve', function(file){
 });
 
 //编译less
-gulp.task('less-dev', ['concat-css-dev'], function(){
+gulp.task('less-dev', function(){
 	return gulp.src('app/less/**/*.less')
 		.pipe(plumber({errorHandler: notify.onError('Error: <%= error.message %>')}))
 		.pipe(less())
@@ -40,36 +44,69 @@ gulp.task('less-dev', ['concat-css-dev'], function(){
 });
 
 //合并压缩js
-gulp.task('concat-js-dev', function(){
+gulp.task('concat-js-dev', ['concat-js-dev-clean'], function(){
 	return gulp.src(['app/js/*.js','!app/js/*.tmp.js'])
 		.pipe(concat('main.js'))
-		.pipe(uglify())
+		//.pipe(uglify())
 		.pipe(gulp.dest('app/assets/js'));
 });
 
-gulp.task('concat-js-dev-plugins', function(){
+gulp.task('concat-js-dev-clean', function(){
+	return gulp.src('app/assets/js/*.js').pipe(clean());
+});
+
+gulp.task('concat-js-dev-plugins', ['concat-js-dev-plugins-clean'], function(){
 	return gulp.src(['app/js/plugins/**/*.js', '!app/js/plugins/**/*.tmp.js'])
 		.pipe(concat('plugin.js'))
 		.pipe(uglify())
-		.pipe(gulp.dest('app/assets/js/'));
+		.pipe(gulp.dest('app/assets/js/plugins'));
+});
+
+gulp.task('concat-js-dev-plugins-clean', function(){
+	return gulp.src('app/assets/js/plugins/*.js').pipe(clean());
+});
+
+gulp.task('concat-js-vendor', ['concat-js-dev-vendor-clean'], function(){
+	return gulp.src(['app/js/vendor/**/*.js','!app/js/vendor/*/*.tmp.js'])
+		.pipe(concat('vendor.js'))
+		.pipe(uglify())
+		.pipe(gulp.dest('app/assets/js/vendor'));
+});
+
+gulp.task('concat-js-dev-vendor-clean', function(){
+	return gulp.src('app/assets/js/vendor/*.js').pipe(clean());
 });
 
 //合并压缩css
 gulp.task('concat-css-dev', function(){
 	return gulp.src('app/css/**/*.css')
 		.pipe(concat('main.css'))
+		//.pipe(minify())
+		.pipe(gulp.dest('app/assets/css'));
+});
+
+gulp.task('concat-css-plugin', function(){
+	return gulp.src('app/css/plugins/**/*.css')
+		.pipe(concat('plugin.css'))
 		.pipe(minify())
 		.pipe(gulp.dest('app/assets/css'));
 });
 
 //复制图片到开发库
-gulp.task('img-dev', function(){
+gulp.task('img-dev', ['img-dev-clean'], function(){
 	return gulp.src('app/images/**/*.*')
 		.pipe(gulp.dest('app/assets/images'));
 });
 
+//清除图片缓存
+gulp.task('img-dev-clean', function(){
+	return gulp.src('app/assets/images')
+		.pipe(clean());
+});
+
+
 //默认命令开启本地服务器
-gulp.task('default', gulpSequence('less-dev','concat-js-dev','concat-js-dev-plugins','concat-css-dev','img-dev','serve'));
+gulp.task('default', gulpSequence('less-dev','concat-js-dev','concat-js-dev-plugins','concat-js-vendor','concat-css-dev','concat-css-plugin','img-dev','serve'));
 
 
 
@@ -94,7 +131,8 @@ gulp.task('html', function(){
 
 //复制js
 gulp.task('js', function(){
-	return gulp.src('app/assets/js/**/*.js', {base: 'app'})		
+	return gulp.src('app/assets/js/**/*.js', {base: 'app'})	
+		.pipe(uglify())	
 		.pipe(rev())
 		.pipe(gulp.dest('dist'))
 		.pipe(rev.manifest())
@@ -107,6 +145,7 @@ gulp.task('css', function(){
 		.pipe(autofixer({
 			browsers: ['last 2 versions','Android >= 4.0']
 		}))
+		.pipe(minify())
 		.pipe(rev())
 		.pipe(gulp.dest('dist'))
 		.pipe(rev.manifest())
@@ -124,7 +163,9 @@ gulp.task('rev', function(){
 gulp.task('build', gulpSequence(
 	'concat-js-dev',
 	'concat-js-dev-plugins',
+	'concat-js-vendor',
 	'concat-css-dev',
+	'concat-css-plugin',
 	'img-dev',
 	'clean',
 	'less-dev',

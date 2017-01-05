@@ -1,10 +1,10 @@
 {
   "name": "gulp-page-tool",
   "version": "1.0.0",
-  "description": "",
+  "description": "gulp-page-tool",
   "main": "index.js",
   "scripts": {
-    "dev": "gulp serve",
+    "dev": "gulp",
     "build": "gulp build"
   },
   "author": "zick",
