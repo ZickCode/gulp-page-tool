@@ -10,7 +10,9 @@ var gulp = require('gulp'),
 	autofixer = require('gulp-autoprefixer'),
 	gulpSequence = require('gulp-sequence'),
 	rev = require('gulp-rev'),
-	revCollector = require('gulp-rev-collector');
+	revCollector = require('gulp-rev-collector'),
+	notify = require('gulp-notify'),
+	plumber = require('gulp-plumber');
 
 
 //开发task
@@ -32,6 +34,7 @@ gulp.task('serve', function(file){
 //编译less
 gulp.task('less-dev', ['concat-css-dev'], function(){
 	return gulp.src('app/less/**/*.less')
+		.pipe(plumber({errorHandler: notify.onError('Error: <%= error.message %>')}))
 		.pipe(less())
 		.pipe(gulp.dest('app/css'));
 });
