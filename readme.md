@@ -28,7 +28,7 @@ npm install -g cnpm --registry=https://registry.npm.taobao.org
 │    ├── assets/                    # 本地服务器预览资源
 │    ├── css/                       # css资源
 │ 	 │	 ├── plugin/                # 插件样式
-│    │   ├── page.**.css            # 页面样式
+│    │   ├── main.css               # 页面样式
 │    │   └── **.css                 # 其他样式
 │    ├── images/                    # 图片资源
 │ 	 │	 ├── plugin.xxx.png         # 插件图
