@@ -12,7 +12,9 @@ var gulp = require('gulp'),
 	rev = require('gulp-rev'),
 	revCollector = require('gulp-rev-collector'),
 	notify = require('gulp-notify'),
-	plumber = require('gulp-plumber');
+	plumber = require('gulp-plumber'),
+	htmlmin = require('gulp-htmlmin'),
+	revAppend = require('gulp-rev-append');
 
 
 //开发task
@@ -106,7 +108,16 @@ gulp.task('img-dev-clean', function(){
 
 
 //默认命令开启本地服务器
-gulp.task('default', gulpSequence('less-dev','concat-js-dev','concat-js-dev-plugins','concat-js-vendor','concat-css-dev','concat-css-plugin','img-dev','serve'));
+gulp.task('default', gulpSequence(
+	'less-dev',
+	'concat-js-dev',
+	'concat-js-dev-plugins',
+	'concat-js-vendor',
+	'concat-css-dev',
+	'concat-css-plugin',
+	'img-dev',
+	'serve'
+));
 
 
 
@@ -126,7 +137,18 @@ gulp.task('img', function(){
 
 //复制html
 gulp.task('html', function(){
-	return gulp.src('app/*.html').pipe(gulp.dest('dist'));
+	var options = {
+		removeComments: true,//清除HTML注释
+		collapseWhitespace: true,//压缩HTML清楚空格
+		minifyJS: true,//压缩页面JS
+		minifyCSS: true//压缩页面CSS
+	}
+	return gulp.src('app/*.html')
+		//压缩html,可选
+		//.pipe(htmlmin(options))
+		//不修改文件名的版本控制插件,需要在文件后面手动加上版本号?rev=@@hash,可选
+		//.pipe(revAppend())
+		.pipe(gulp.dest('dist'));
 });
 
 //复制js

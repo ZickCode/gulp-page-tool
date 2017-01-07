@@ -1,6 +1,7 @@
 gulp-page-tool
 
 author: zickcode@foxmail.com
+github: https://github.com/ZickCode/gulp-page-tool
 
 
 安装软件

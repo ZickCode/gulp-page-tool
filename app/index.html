@@ -2,9 +2,10 @@
 <html lang="zh">
     <head>
         <meta charset="utf-8">
+        <meta content=always name=referrer>
         <meta name="renderer" content="webkit">
         <meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1">
-        <meta content=always name=referrer>
+        <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport">
         <meta name="keywords" content="网页关键词 必填"/>
         <meta name="description" content="网页描述 必填" />
         <meta itemprop="name" content="QQ分享标题 必填"/>
@@ -13,29 +14,6 @@
         <title>PageTitle</title>
         <link rel="stylesheet" href="assets/css/plugin.css">
         <link rel="stylesheet" href="assets/css/main.css">
-        <script>
-            //移动端页面适配，PC请移除
-			var docElement = document.documentElement,
-            metaElement = document.querySelector('meta[name="viewport"]'),
-            styleElement = document.createElement("style"),
-            version,
-            screenScale = 1,
-            originScreenW = 750,
-            originScreenH = 1333,
-            screenW = window.screen.width,
-            screenH = window.screen.height;
-            screenScale = parseInt(screenW) / 750;
-            if (/Android (\d+\.\d+)/.test(navigator.userAgent)) {
-                version = parseFloat(RegExp.$1);
-                if (version > 2.3) {
-                    metaElement.setAttribute("content", "width=750,minimum-scale=" + screenScale + ",maximum-scale=" + screenScale + ",target-densitydpi=device-dpi")
-                } else {
-                    metaElement.setAttribute("content", "width=750,target-densitydpi=device-dpi")
-                }
-            } else {
-                metaElement.setAttribute("content", "width=750,user-scalable=no,target-densitydpi=device-dpi")
-            }
-        </script>
     </head>
     <body>
         <div class="wrap">
@@ -44,7 +22,7 @@
             <div class="foot"></div>
         </div>
         <script src="assets/js/vendor/vendor.js"></script>
-        <script src="assets/js/plugins/plugin.js"></script>
+        <!--<script src="assets/js/plugins/plugin.js"></script>-->
         <script src="assets/js/main.js"></script>
     </body>
 </html>
