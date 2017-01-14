@@ -43,6 +43,9 @@ gulp.task('less-dev', function(){
 	return gulp.src('app/less/**/*.less')
 		.pipe(plumber({errorHandler: notify.onError('Error: <%= error.message %>')}))
 		.pipe(less())
+		.pipe(autofixer({
+			browsers: ['last 2 versions','Android >= 4.0']
+		}))
 		.pipe(gulp.dest('app/css'));
 });
 
@@ -62,6 +65,7 @@ gulp.task('concat-js-dev-clean', function(){
 gulp.task('concat-js-dev-plugins', ['concat-js-dev-plugins-clean'], function(){
 	return gulp.src(['app/js/plugins/**/*.js', '!app/js/plugins/**/*.tmp.js'])
 		.pipe(concat('plugin.js'))
+		.pipe(babel({presets: ['es2015']}))
 		.pipe(uglify())
 		.pipe(gulp.dest('app/assets/js/plugins'));
 });
@@ -73,6 +77,7 @@ gulp.task('concat-js-dev-plugins-clean', function(){
 gulp.task('concat-js-vendor', ['concat-js-dev-vendor-clean'], function(){
 	return gulp.src(['app/js/vendor/**/*.js','!app/js/vendor/*/*.tmp.js'])
 		.pipe(concat('vendor.js'))
+		.pipe(babel({presets: ['es2015']}))
 		.pipe(uglify())
 		.pipe(gulp.dest('app/assets/js/vendor'));
 });
