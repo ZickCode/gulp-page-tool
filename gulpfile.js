@@ -14,7 +14,8 @@ var gulp = require('gulp'),
 	notify = require('gulp-notify'),
 	plumber = require('gulp-plumber'),
 	htmlmin = require('gulp-htmlmin'),
-	revAppend = require('gulp-rev-append');
+	revAppend = require('gulp-rev-append'),
+	babel = require('gulp-babel');
 
 
 //开发task
@@ -49,6 +50,7 @@ gulp.task('less-dev', function(){
 gulp.task('concat-js-dev', ['concat-js-dev-clean'], function(){
 	return gulp.src(['app/js/*.js','!app/js/*.tmp.js'])
 		.pipe(concat('main.js'))
+		.pipe(babel({presets: ['es2015']}))
 		//.pipe(uglify())
 		.pipe(gulp.dest('app/assets/js'));
 });

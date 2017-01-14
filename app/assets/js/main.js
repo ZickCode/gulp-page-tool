@@ -19,3 +19,4 @@
 // } else {
 //     metaElement.setAttribute("content", "width=750,user-scalable=no,target-densitydpi=device-dpi")
 // }
+"use strict";
