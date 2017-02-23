@@ -19,25 +19,6 @@ var gulp = require('gulp'),
 
 
 //开发task
-//开启本地服务器实时预览
-gulp.task('serve', function(file){
-	browserSync.init({
-		server: {
-			baseDir: 'app/',
-		},
-		port: 8000
-	});
-	//监听文件变化重新编译
-	gulp.watch('app/less/**/*.less', ['less-dev']);
-	gulp.watch('app/js/*.js', ['concat-js-dev']);
-	gulp.watch('app/js/plugins/*.js', ['concat-js-dev-plugins']);
-	gulp.watch('app/js/vendor/*.js', ['concat-js-vendor']);
-	gulp.watch('app/css/**/*', ['concat-css-dev']);
-	gulp.watch('app/images/**/*', ['img-dev']);
-	//监听文件变化刷新浏览器
-	gulp.watch(['app/*','app/js/**/*.js','app/css/**/*.css','app/images/**/*.*'], browserSync.reload);
-});
-
 //编译less
 gulp.task('less-dev', function(){
 	return gulp.src('app/less/**/*.less')
@@ -50,40 +31,36 @@ gulp.task('less-dev', function(){
 });
 
 //合并压缩js
-gulp.task('concat-js-dev', ['concat-js-dev-clean'], function(){
+gulp.task('concat-js-dev', function(){
 	return gulp.src(['app/js/*.js','!app/js/*.tmp.js'])
 		.pipe(concat('main.js'))
 		.pipe(babel({presets: ['es2015']}))
 		//.pipe(uglify())
-		.pipe(gulp.dest('app/assets/js'));
+		.pipe(gulp.dest('app/assets/js/page'));
 });
 
 gulp.task('concat-js-dev-clean', function(){
-	return gulp.src('app/assets/js/*.js').pipe(clean());
+	return gulp.src('app/assets/js/page/*.js').pipe(clean());
 });
 
-gulp.task('concat-js-dev-plugins', ['concat-js-dev-plugins-clean'], function(){
+gulp.task('concat-js-dev-plugins', function(){
 	return gulp.src(['app/js/plugins/**/*.js', '!app/js/plugins/**/*.tmp.js'])
 		.pipe(concat('plugin.js'))
 		.pipe(babel({presets: ['es2015']}))
 		.pipe(uglify())
-		.pipe(gulp.dest('app/assets/js/plugins'));
+		.pipe(gulp.dest('app/assets/js'));
 });
 
-gulp.task('concat-js-dev-plugins-clean', function(){
-	return gulp.src('app/assets/js/plugins/*.js').pipe(clean());
-});
-
-gulp.task('concat-js-vendor', ['concat-js-dev-vendor-clean'], function(){
+gulp.task('concat-js-vendor', function(){
 	return gulp.src(['app/js/vendor/**/*.js','!app/js/vendor/*/*.tmp.js'])
 		.pipe(concat('vendor.js'))
 		.pipe(babel({presets: ['es2015']}))
 		.pipe(uglify())
-		.pipe(gulp.dest('app/assets/js/vendor'));
+		.pipe(gulp.dest('app/assets/js'));
 });
 
-gulp.task('concat-js-dev-vendor-clean', function(){
-	return gulp.src('app/assets/js/vendor/*.js').pipe(clean());
+gulp.task('concat-js-dev-out-clean', function(){
+	return gulp.src('app/assets/js/*.js').pipe(clean());
 });
 
 //合并压缩css
@@ -101,6 +78,10 @@ gulp.task('concat-css-plugin', function(){
 		.pipe(gulp.dest('app/assets/css'));
 });
 
+gulp.task('css-dev-clean', function(){
+	return gulp.src('app/assets/css').pipe(clean());
+});
+
 //复制图片到开发库
 gulp.task('img-dev', ['img-dev-clean'], function(){
 	return gulp.src('app/images/**/*.*')
@@ -116,6 +97,10 @@ gulp.task('img-dev-clean', function(){
 
 //默认命令开启本地服务器
 gulp.task('default', gulpSequence(
+	'concat-js-dev-clean',
+	'concat-js-dev-out-clean',
+	'css-dev-clean',
+	'img-dev-clean',
 	'less-dev',
 	'concat-js-dev',
 	'concat-js-dev-plugins',
@@ -126,6 +111,34 @@ gulp.task('default', gulpSequence(
 	'serve'
 ));
 
+//开启本地服务器实时预览
+gulp.task('serve', function(file){
+	browserSync.init({
+		server: {
+			baseDir: 'app/',
+		},
+		port: 8000
+	});
+	//监听文件变化重新编译
+	gulp.watch('app/less/**/*.less', ['less-dev']);
+	gulp.watch('app/js/page/*.js', function(){
+		return gulpSequence('concat-js-dev-clean', 'concat-js-dev', browserSync.reload);
+	});
+	gulp.watch('app/js/plugins/*.js', function(){
+		return gulpSequence('concat-js-dev-out-clean', 'concat-js-dev-plugins', browserSync.reload);
+	});
+	gulp.watch('app/js/vendor/*.js', function(){
+		return gulpSequence('concat-js-dev-out-clean', 'concat-js-vendor', browserSync.reload);
+	});
+	gulp.watch('app/css/**/*', function(){
+		return gulpSequence('css-dev-clean', 'concat-css-dev', browserSync.reload);
+	});
+	gulp.watch('app/images/**/*', function(){
+		return gulpSequence('img-dev-clean', 'img-dev', browserSync.reload)
+	});
+	//监听文件变化刷新浏览器
+	gulp.watch(['app/*.*'], browserSync.reload);
+});
 
 
 
@@ -190,6 +203,11 @@ gulp.task('rev', function(){
 
 //打包发布版本
 gulp.task('build', gulpSequence(
+	'concat-js-dev-clean',
+	'concat-js-dev-out-clean',
+	'css-dev-clean',
+	'img-dev-clean',	
+	'less-dev',
 	'concat-js-dev',
 	'concat-js-dev-plugins',
 	'concat-js-vendor',
@@ -197,7 +215,6 @@ gulp.task('build', gulpSequence(
 	'concat-css-plugin',
 	'img-dev',
 	'clean',
-	'less-dev',
 	'html',
 	'js',
 	'css',
