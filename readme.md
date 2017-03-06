@@ -34,7 +34,7 @@ npm install -g cnpm --registry=https://registry.npm.taobao.org<br>
 │    ├── images/                    # 图片资源<br>
 │    │   ├── plugin.xxx.png         # 插件图<br>
 │    │   ├── sprit.png         	    # 雪碧图<br>
-│    │   └── **.**  				# 其他图<br>
+│    │   └── **.**  				        # 其他图<br>
 │    ├── js/                        # js资源<br>
 │    │   ├── plugins/               # 第三方插件<br>
 │    │   ├── vender/                # 如jQuery、Zepto、React等<br>
