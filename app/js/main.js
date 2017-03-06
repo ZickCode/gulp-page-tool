@@ -1,4 +1,4 @@
-//移动端页面适配，PC请移除
+//移动端页面适配，设置页面width为750，已有更全面的使用rem的hotcss方案，可选择使用
 // var docElement = document.documentElement,
 // metaElement = document.querySelector('meta[name="viewport"]'),
 // styleElement = document.createElement("style"),

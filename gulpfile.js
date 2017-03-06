@@ -1,6 +1,7 @@
 var gulp = require('gulp'),
 	browserSync = require('browser-sync'),
 	less = require('gulp-less'),
+	sass = require('gulp-sass'),
 	concat = require('gulp-concat'),
 	uglify = require('gulp-uglify'),
 	rename = require('gulp-rename'),
@@ -15,7 +16,9 @@ var gulp = require('gulp'),
 	plumber = require('gulp-plumber'),
 	htmlmin = require('gulp-htmlmin'),
 	revAppend = require('gulp-rev-append'),
-	babel = require('gulp-babel');
+	babel = require('gulp-babel'),
+	lessFunction = require('less-plugin-functions');
+var lessFoo = new lessFunction();
 
 
 //开发task
@@ -23,11 +26,32 @@ var gulp = require('gulp'),
 gulp.task('less-dev', function(){
 	return gulp.src('app/less/**/*.less')
 		.pipe(plumber({errorHandler: notify.onError('Error: <%= error.message %>')}))
-		.pipe(less())
+		.pipe(less({
+			plugins: [lessFoo]
+		}))
 		.pipe(autofixer({
 			browsers: ['last 2 versions','Android >= 4.0']
 		}))
 		.pipe(gulp.dest('app/css'));
+});
+
+//合并压缩css
+gulp.task('concat-css-dev', function(){
+	return gulp.src(['app/css/reset.css', 'app/css/animate.css', 'app/css/**/*.css'])
+		.pipe(concat('main.css'))
+		//.pipe(minify())
+		.pipe(gulp.dest('app/assets/css'));
+});
+
+gulp.task('concat-css-plugin', function(){
+	return gulp.src('app/css/plugins/**/*.css')
+		.pipe(concat('plugin.css'))
+		.pipe(minify())
+		.pipe(gulp.dest('app/assets/css'));
+});
+
+gulp.task('css-dev-clean', function(){
+	return gulp.src('app/assets/css').pipe(clean());
 });
 
 //合并压缩js
@@ -61,25 +85,6 @@ gulp.task('concat-js-vendor', function(){
 
 gulp.task('concat-js-dev-out-clean', function(){
 	return gulp.src('app/assets/js/*.js').pipe(clean());
-});
-
-//合并压缩css
-gulp.task('concat-css-dev', function(){
-	return gulp.src('app/css/**/*.css')
-		.pipe(concat('main.css'))
-		//.pipe(minify())
-		.pipe(gulp.dest('app/assets/css'));
-});
-
-gulp.task('concat-css-plugin', function(){
-	return gulp.src('app/css/plugins/**/*.css')
-		.pipe(concat('plugin.css'))
-		.pipe(minify())
-		.pipe(gulp.dest('app/assets/css'));
-});
-
-gulp.task('css-dev-clean', function(){
-	return gulp.src('app/assets/css').pipe(clean());
 });
 
 //复制图片到开发库
@@ -187,7 +192,7 @@ gulp.task('css', function(){
 		.pipe(autofixer({
 			browsers: ['last 2 versions','Android >= 4.0']
 		}))
-		.pipe(minify())
+		.pipe(minify({}))
 		.pipe(rev())
 		.pipe(gulp.dest('dist'))
 		.pipe(rev.manifest())
