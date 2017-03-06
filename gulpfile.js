@@ -30,7 +30,7 @@ gulp.task('less-dev', function(){
 			plugins: [lessFoo]
 		}))
 		.pipe(autofixer({
-			browsers: ['last 2 versions','Android >= 4.0']
+			browsers: ['last 4 versions','Android >= 4.0']
 		}))
 		.pipe(gulp.dest('app/css'));
 });
@@ -68,7 +68,7 @@ gulp.task('concat-js-dev-clean', function(){
 });
 
 gulp.task('concat-js-dev-plugins', function(){
-	return gulp.src(['app/js/plugins/**/*.js', '!app/js/plugins/**/*.tmp.js'])
+	return gulp.src(['app/js/plugins/hotcss.js', '!app/js/plugins/**/*.tmp.js'])
 		.pipe(concat('plugin.js'))
 		.pipe(babel({presets: ['es2015']}))
 		.pipe(uglify())
