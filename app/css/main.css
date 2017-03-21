@@ -3,25 +3,33 @@
 *::before {
   box-sizing: border-box;
 }
+
 .fn-left {
   float: left;
 }
+
 .fn-right {
   float: right;
 }
+
 .fn-nomt {
   margin-top: 0;
 }
+
 .fn-nomb {
   margin-bottom: 0;
 }
+
 .fn-noml {
   margin-left: 0;
 }
+
 .fn-nomr {
   margin-right: 0;
 }
+
 .fn-center {
+  /* Center slide text vertically */
   display: -webkit-box;
   display: -ms-flexbox;
   display: -webkit-flex;
@@ -35,11 +43,14 @@
   -webkit-align-items: center;
   align-items: center;
 }
+
 .fn-cut {
+  /* 单行文本截断省略号 */
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
 .fn-clear {
   content: '';
   display: block;
@@ -47,6 +58,7 @@
   visibility: hidden;
   clear: both;
 }
+
 .fn-wrap {
   width: 1200px;
   margin: 0 auto;

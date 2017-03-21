@@ -17,8 +17,8 @@ var gulp = require('gulp'),
 	htmlmin = require('gulp-htmlmin'),
 	revAppend = require('gulp-rev-append'),
 	babel = require('gulp-babel'),
-	lessFunction = require('less-plugin-functions');
-var lessFoo = new lessFunction();
+	postcss = require('gulp-postcss'),
+	px2rem = require('postcss-px2rem');
 
 
 //开发task
@@ -26,12 +26,11 @@ var lessFoo = new lessFunction();
 gulp.task('less-dev', function(){
 	return gulp.src('app/less/**/*.less')
 		.pipe(plumber({errorHandler: notify.onError('Error: <%= error.message %>')}))
-		.pipe(less({
-			plugins: [lessFoo]
-		}))
+		.pipe(less())
 		.pipe(autofixer({
 			browsers: ['last 4 versions','Android >= 4.0']
 		}))
+		.pipe(postcss([px2rem({remUnit: 75})]))
 		.pipe(gulp.dest('app/css'));
 });
 

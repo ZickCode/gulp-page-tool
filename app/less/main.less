@@ -28,8 +28,8 @@
     margin-right: 0;
 }
 
-// 垂直居中
 .fn-center {
+    /* Center slide text vertically */
     display: -webkit-box;
     display: -ms-flexbox;
     display: -webkit-flex;
@@ -44,14 +44,13 @@
     align-items: center;
 }
 
-// 单行文本截断省略号
 .fn-cut {
+    /* 单行文本截断省略号 */
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
-// 清除浮动
 .fn-clear{
 	content: '';
     display: block;
@@ -60,19 +59,9 @@
     clear: both;
 }
 
-// hotcss px转rem，需要手动配置设计图宽度，默认为750px
-@designWidth: 750;
-.function(){
-    .pr(@px){
-        return : unit(@px*320/@designWidth/20 , rem);
-    }
-}
-
 .fn-wrap {
-    width: 1200px;
+    width: 1200px; /*no*/
     margin: 0 auto;
 }
 
-html {
-    
-}
+html {}
