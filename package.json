@@ -20,7 +20,6 @@
     "gulp-connect": "^5.0.0",
     "gulp-htmlmin": "^3.0.0",
     "gulp-imagemin": "^3.1.1",
-    "gulp-less": "^3.3.0",
     "gulp-minify-css": "^1.2.4",
     "gulp-notify": "^2.2.0",
     "gulp-plumber": "^1.1.0",
@@ -29,9 +28,11 @@
     "gulp-rev": "^7.1.2",
     "gulp-rev-append": "^0.1.7",
     "gulp-rev-collector": "^1.1.1",
+    "gulp-sass": "^3.1.0",
     "gulp-sequence": "^0.4.6",
     "gulp-uglify": "^2.0.0",
     "gulp-webserver": "^0.9.1",
+    "node-sass": "^4.7.2",
     "postcss-px2rem": "^0.3.0"
   }
 }
